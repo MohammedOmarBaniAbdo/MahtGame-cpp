@@ -1,0 +1,169 @@
+#include <iostream>
+using namespace std;
+int Roundem(int form, int to) {
+	int Roun = rand() % (to - form + 1) + form;
+	return Roun;
+}
+char GetRandomOperator() {
+	int r = rand() % 4;
+	switch (r) {
+	case 0: return '+';
+	case 1: return '-';
+	case 2: return '*';
+	case 3: return '/';
+	}
+	return '+'; 
+}
+void LevelOfQ(short &Num1,short &Num2,short &Level) {
+	if (Level == 1) {
+		Num1 = Roundem(50, 100);
+		Num2 = Roundem(50, 100);
+	}
+	else if (Level == 2) {
+		Num1 = Roundem(10, 50);
+		Num2 = Roundem(10, 50);
+	}
+	else if (Level == 3) {
+		Num1 = Roundem(1, 10);
+		Num2 = Roundem(1, 10);
+	}
+	else {
+		Num1 = Roundem(1, 100);
+		Num2 = Roundem(1, 100);
+	}
+}
+void TypeOfQ(short Num1, short Num2, short Level,char Ope,int &countT,int &countF) {
+	int Result = 0, ResultUser;
+	if (Ope == '+' || Ope == '-' || Ope == '*' || Ope == '/') {
+		if (Ope == 'M' || Ope == 'm') {
+			Ope = Roundem(42, 47);
+		}
+		else if (Ope == '+') {
+			Result = Num1 + Num2;
+		}
+		else if (Ope == '-') {
+			Result = Num1 - Num2;
+		}
+		if (Ope == '*') {
+			Result = Num1 * Num2;
+		}
+		else if (Ope == '/') {
+			Result = Num1 / Num2;
+		}
+		cout << Num1 << Ope << Num2 << " =  " << endl;
+		cin >> ResultUser;
+		if (Result == ResultUser) {
+			countT++;
+			system("Color 2F");
+			cout << "True\n";
+		}
+		else {
+			countF++;
+			system("Color 4F");
+			cout << "False\n";
+		}
+		cout << Result;
+	}
+	else if (Ope == 'M' || Ope == 'm') {
+		Ope = GetRandomOperator();
+		cout << Num1 << " " << Ope << " " << Num2 << " = " << endl;
+		cin >> ResultUser;
+		switch (Ope)
+		{
+		case '+':
+			Result = Num1 + Num2;
+			break;
+		case '-':
+			Result = Num1 - Num2;
+			break;
+		case '*':
+			Result = Num1 * Num2;
+			break;
+		case '/':
+			Result = Num1 / Num2;
+			break;
+		}
+		if (Result == ResultUser) {
+			countT++;
+			system("Color 2");
+			cout << Result;
+			cout << "\nTrue\n";
+		}
+		else {
+			countF++;
+			system("Color 4");
+			cout << Result;
+			cout << "\nFalse\n";
+		}
+	}
+	else {
+		cout << "Enter Right Value\n";
+	}
+}
+bool CheckYesOrNo() {
+	char ch;
+	cout << "Are You Play Agen(Y/N): \n";
+	cin >> ch;
+	if (ch == 'Y' || ch == 'y') {
+		return true;
+	}
+	else if (ch == 'N' || ch == 'n') {
+		return false;
+	}
+	else {
+		cout << "Enter Y or N\n";
+		return CheckYesOrNo();
+	}
+}
+void ResetScreen() {
+	system("cls");
+	system("color 0F");
+}
+void FinleScreen(int countT, int countF) {
+	if (countT >= countF) {
+		cout << "_____________________________________\n";
+		cout << "_____________________________________\n";
+		system("color 2F");
+		cout << "Number of correct answers: " << countT << endl;
+		cout << "You succeede\n";
+		cout << "_____________________________________\n";
+		cout << "_____________________________________\n";
+	}
+	else {
+		cout << "_____________________________________\n";
+		cout << "_____________________________________\n";
+		system("color 4F");
+		cout << "Number of wrong answers: " << countF << endl;
+		cout << "You failed\n";
+		cout << "_____________________________________\n";
+		cout << "_____________________________________\n";
+	}
+}
+void MahtGame(short &Num1, short &Num2, short &Level) {
+	int countT = 0, countF = 0;
+	do {
+		ResetScreen();
+		int X;
+		cout << "How many questions do you want in the quiz?\n";
+		cin >> X;
+		cout << "Level Of Question(Hard[1],Medium[2],Easy[3],Mix[4]): \n";
+		cin >> Level;
+		char Ope;
+		cout << "The Type Of Question(+,-,/,*) or Mix[M]: \n";
+		cin >> Ope;
+		for (int i = 0; i < X; i++) {
+			LevelOfQ(Num1,Num2,Level);
+			TypeOfQ(Num1,Num2,Level,Ope,countT,countF);
+		}
+		FinleScreen(countT, countF);
+		countT = 0;
+		countF = 0;
+	} while (CheckYesOrNo());
+
+}
+int main()
+{
+	srand((unsigned)time(NULL));
+	short Num1, Num2, Level;
+	MahtGame(Num1,Num2,Level);
+}
